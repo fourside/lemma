@@ -5,10 +5,10 @@ import type { WeekDetail } from "../../../models/week";
 import { TestWrapper } from "../../testing/wrapper";
 import { WeekDetailPage } from "./page";
 
-const mockApiFetch = vi.fn();
+const mockApiFetch = vi.hoisted(() => vi.fn());
 vi.mock("../../shared/api/client", () => ({
   swrFetcher: vi.fn(),
-  apiFetch: (...args: unknown[]) => mockApiFetch(...args),
+  apiFetch: mockApiFetch,
 }));
 
 const useSWRMock = vi.hoisted(() => vi.fn());
@@ -37,12 +37,21 @@ const baseWeek: WeekDetail = {
   completedAt: null,
 };
 
+function mockWeekDetail(
+  data: WeekDetail,
+  overrides?: { mutate?: ReturnType<typeof vi.fn> },
+) {
+  useSWRMock.mockReturnValue({
+    data,
+    error: undefined,
+    isLoading: false,
+    mutate: overrides?.mutate ?? vi.fn(),
+  });
+}
+
 describe("WeekDetailPage", () => {
   it("renders week detail with keywords", () => {
-    useSWRMock.mockReturnValue({
-      data: baseWeek,
-      mutate: vi.fn(),
-    });
+    mockWeekDetail(baseWeek);
 
     render(<WeekDetailPage />, { wrapper: TestWrapper });
 
@@ -53,10 +62,7 @@ describe("WeekDetailPage", () => {
   });
 
   it("shows mark done button for next step", () => {
-    useSWRMock.mockReturnValue({
-      data: baseWeek,
-      mutate: vi.fn(),
-    });
+    mockWeekDetail(baseWeek);
 
     render(<WeekDetailPage />, { wrapper: TestWrapper });
 
@@ -66,10 +72,7 @@ describe("WeekDetailPage", () => {
   it("calls apiFetch and mutate when marking progress", async () => {
     const mutate = vi.fn();
     mockApiFetch.mockResolvedValue({ ok: true });
-    useSWRMock.mockReturnValue({
-      data: baseWeek,
-      mutate,
-    });
+    mockWeekDetail(baseWeek, { mutate });
 
     render(<WeekDetailPage />, { wrapper: TestWrapper });
 
@@ -85,10 +88,7 @@ describe("WeekDetailPage", () => {
   });
 
   it("shows test score form after text_done", () => {
-    useSWRMock.mockReturnValue({
-      data: { ...baseWeek, status: "text_done" },
-      mutate: vi.fn(),
-    });
+    mockWeekDetail({ ...baseWeek, status: "text_done" });
 
     render(<WeekDetailPage />, { wrapper: TestWrapper });
 
@@ -97,14 +97,11 @@ describe("WeekDetailPage", () => {
   });
 
   it("shows completed test score", () => {
-    useSWRMock.mockReturnValue({
-      data: {
-        ...baseWeek,
-        status: "test_done",
-        testScore: 85,
-        testNotes: "帰納法が弱い",
-      },
-      mutate: vi.fn(),
+    mockWeekDetail({
+      ...baseWeek,
+      status: "test_done",
+      testScore: 85,
+      testNotes: "帰納法が弱い",
     });
 
     render(<WeekDetailPage />, { wrapper: TestWrapper });
