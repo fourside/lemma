@@ -18,8 +18,7 @@ case $PHASE in
 esac
 
 for COURSE_ID in $COURSES; do
-  # Count weeks for this course from seed.sql
-  WEEK_COUNT=$(grep -c "($COURSE_ID," scripts/seed.sql | head -1) || true
+  WEEK_COUNT=$(grep -cE "^\s+\([0-9]+, $COURSE_ID, [0-9]+, '" scripts/seed.sql) || true
   if [ "$WEEK_COUNT" -eq 0 ]; then
     echo "No weeks found for course $COURSE_ID"
     continue

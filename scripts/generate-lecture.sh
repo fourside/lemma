@@ -27,8 +27,7 @@ generate() {
   echo "  -> $output_file"
 }
 
-# Get week info from seed data (simple grep from seed.sql)
-WEEK_LINE=$(grep "($COURSE, $WEEK," scripts/seed.sql | head -1) || true
+WEEK_LINE=$(grep -E "^\s+\([0-9]+, $COURSE, $WEEK, '" scripts/seed.sql | head -1) || true
 if [ -z "$WEEK_LINE" ]; then
   echo "Error: Week not found in seed.sql for course=$COURSE week=$WEEK"
   exit 1
