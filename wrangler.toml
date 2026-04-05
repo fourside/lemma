@@ -8,7 +8,7 @@ not_found_handling = "single-page-application"
 [[d1_databases]]
 binding = "DB"
 database_name = "lemma"
-database_id = "local"
+database_id = "151c03c9-c25f-4dbe-bdc1-48e67a6a57b1"
 migrations_dir = "migrations"
 
 [[r2_buckets]]
