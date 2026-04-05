@@ -50,6 +50,15 @@ export interface Database {
     content: string;
     generated_at: string;
   };
+  test_attempts: {
+    id: Generated<number>;
+    week_id: number;
+    score: number;
+    max_score: number;
+    answers_json: string | null;
+    feedback_json: string | null;
+    attempted_at: string;
+  };
 }
 
 export function createDb(d1: D1Database): Kysely<Database> {

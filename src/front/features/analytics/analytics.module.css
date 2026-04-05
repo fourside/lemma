@@ -1,0 +1,71 @@
+.page {
+  padding: var(--space-page);
+  padding-bottom: calc(var(--nav-height) + var(--space-page));
+  max-width: var(--page-max-width);
+  margin: 0 auto;
+}
+
+.title {
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+  margin: 0 0 16px;
+}
+
+.empty {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-base);
+}
+
+.card {
+  padding: 12px 16px;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  margin-bottom: 8px;
+}
+
+.cardHeader {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.topic {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+}
+
+.count {
+  font-size: var(--font-size-sm);
+  color: var(--color-error);
+  font-weight: 600;
+}
+
+.cardBody {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+  align-items: center;
+}
+
+.score {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.weeks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  justify-content: end;
+}
+
+.weekLink {
+  font-size: var(--font-size-xs);
+  padding: 1px 6px;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-weight: 500;
+}

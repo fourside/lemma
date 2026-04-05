@@ -168,6 +168,15 @@ export function WeekDetailPage() {
 
       {statusOrder[week.status] >= statusOrder.text_done &&
         week.status !== "test_done" && (
+          <section className={styles.section}>
+            <Link to={`/weeks/${weekId}/test`} className={styles.stepButton}>
+              Take Test
+            </Link>
+          </section>
+        )}
+
+      {statusOrder[week.status] >= statusOrder.text_done &&
+        week.status !== "test_done" && (
           <form className={styles.testForm} onSubmit={handleTestSubmit}>
             <h2 className={styles.stepsTitle}>Record Test Score</h2>
             <input

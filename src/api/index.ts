@@ -3,11 +3,13 @@ import type { Kysely } from "kysely";
 import type { Database } from "./db";
 import { createDb } from "./db";
 import { authMiddleware } from "./middleware/auth";
+import { analyticsRoutes } from "./routes/analytics";
 import { audioRoutes } from "./routes/audio";
 import { authRoutes } from "./routes/auth";
 import { coursesRoutes } from "./routes/courses";
 import { dashboardRoutes } from "./routes/dashboard";
 import { feedRoutes } from "./routes/feed";
+import { testsRoutes } from "./routes/tests";
 import { weeksRoutes } from "./routes/weeks";
 
 export type Env = {
@@ -38,6 +40,8 @@ app.use("/api/*", authMiddleware);
 app.route("/api/dashboard", dashboardRoutes);
 app.route("/api/courses", coursesRoutes);
 app.route("/api/audio", audioRoutes);
+app.route("/api/analytics", analyticsRoutes);
+app.route("/api", testsRoutes);
 app.route("/api", weeksRoutes);
 
 export default app;
