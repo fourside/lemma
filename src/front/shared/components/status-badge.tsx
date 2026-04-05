@@ -14,6 +14,8 @@ function getStatusConfig(status: ProgressStatus): {
       return { label: "Text", className: styles.textDone ?? "" };
     case "test_done":
       return { label: "Done", className: styles.testDone ?? "" };
+    default:
+      throw new Error(`Unknown status: ${status satisfies never}`);
   }
 }
 
