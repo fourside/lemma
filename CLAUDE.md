@@ -1,14 +1,15 @@
 # Lemma
 
-個人用CS自習プラットフォーム。姉妹プロジェクト Pickl のパターンを踏襲している。
+個人用CS自習プラットフォーム。
 
-## コマンド
+## コード検証
 
-- `npm run dev` — 開発サーバー
-- `npm run test:all` — フロントエンド + API テスト一括実行
-- `npm run test:api` — API テストのみ（Workers pool、起動に ~8s）
-- `npm run lint:fix` — Biome lint + format 自動修正
-- `npx tsc --noEmit` — 型チェック
+編集後は以下を実行して問題がないことを確認する:
+
+1. `npx tsc --noEmit` — 型チェック
+2. `npm run lint:fix` — Biome lint + format
+3. `npm run test:all` — フロントエンド + API テスト
+4. `npm run knip` — 未使用 export / 依存の検出
 
 ## 設計判断
 
