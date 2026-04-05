@@ -18,10 +18,15 @@ describe("GET /api/courses", () => {
     expect(res.status).toBe(200);
     const body = v.parse(v.array(CourseWithProgressSchema), await res.json());
     expect(body).toHaveLength(2);
-    expect(body[0].title).toBe("高校数学の橋渡し");
-    expect(body[0].totalWeeks).toBe(3);
-    expect(body[0].completedWeeks).toBe(0);
-    expect(body[1].title).toBe("計算機科学の数学");
-    expect(body[1].totalWeeks).toBe(1);
+
+    const first = body[0];
+    const second = body[1];
+    expect(first).toBeDefined();
+    expect(second).toBeDefined();
+    expect(first?.title).toBe("高校数学の橋渡し");
+    expect(first?.totalWeeks).toBe(3);
+    expect(first?.completedWeeks).toBe(0);
+    expect(second?.title).toBe("計算機科学の数学");
+    expect(second?.totalWeeks).toBe(1);
   });
 });

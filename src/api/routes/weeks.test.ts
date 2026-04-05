@@ -22,9 +22,9 @@ describe("GET /api/courses/:courseId/weeks", () => {
     expect(res.status).toBe(200);
     const body = v.parse(v.array(WeekWithProgressSchema), await res.json());
     expect(body).toHaveLength(3);
-    expect(body[0].title).toBe("論理と集合");
-    expect(body[0].status).toBe("not_started");
-    expect(body[2].isTest).toBe(1);
+    expect(body[0]?.title).toBe("論理と集合");
+    expect(body[0]?.status).toBe("not_started");
+    expect(body[2]?.isTest).toBe(1);
   });
 });
 

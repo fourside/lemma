@@ -70,7 +70,12 @@ export async function verifyJwt(
     throw new Error("Invalid token format");
   }
 
-  const [encodedHeader, encodedPayload, encodedSignature] = parts;
+  const encodedHeader = parts[0];
+  const encodedPayload = parts[1];
+  const encodedSignature = parts[2];
+  if (!encodedHeader || !encodedPayload || !encodedSignature) {
+    throw new Error("Invalid token format");
+  }
   const signingInput = `${encodedHeader}.${encodedPayload}`;
 
   const key = await importHmacKey(secret, ["verify"]);
@@ -155,7 +160,9 @@ export async function verifyPassword(
   password: string,
   storedHash: string,
 ): Promise<boolean> {
-  const [saltHex, expectedHashHex] = storedHash.split(":");
+  const splitIndex = storedHash.indexOf(":");
+  const saltHex = storedHash.slice(0, splitIndex);
+  const expectedHashHex = storedHash.slice(splitIndex + 1);
   const salt = Uint8Array.from(
     saltHex.match(/.{2}/g)?.map((byte) => Number.parseInt(byte, 16)) ?? [],
   );
