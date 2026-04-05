@@ -35,6 +35,10 @@ const baseWeek: WeekDetail = {
   testNotes: null,
   startedAt: null,
   completedAt: null,
+  audioUrl: null,
+  audioDuration: null,
+  lectureText: null,
+  audioLectureText: null,
 };
 
 function mockWeekDetail(

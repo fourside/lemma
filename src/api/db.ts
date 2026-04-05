@@ -1,3 +1,4 @@
+import type { Generated } from "kysely";
 import { Kysely } from "kysely";
 import { D1Dialect } from "kysely-d1";
 import type { ProgressStatus } from "../models/week";
@@ -34,6 +35,20 @@ export interface Database {
     started_at: string | null;
     completed_at: string | null;
     updated_at: string;
+  };
+  audio_episodes: {
+    id: Generated<number>;
+    week_id: number;
+    r2_key: string;
+    duration_seconds: number | null;
+    generated_at: string;
+  };
+  lecture_texts: {
+    id: Generated<number>;
+    week_id: number;
+    type: string;
+    content: string;
+    generated_at: string;
   };
 }
 

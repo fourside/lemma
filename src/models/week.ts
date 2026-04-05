@@ -28,6 +28,10 @@ export const WeekDetailSchema = v.object({
   testNotes: v.nullable(v.string()),
   startedAt: v.nullable(v.string()),
   completedAt: v.nullable(v.string()),
+  audioUrl: v.nullable(v.string()),
+  audioDuration: v.nullable(v.number()),
+  lectureText: v.nullable(v.string()),
+  audioLectureText: v.nullable(v.string()),
 });
 
 export type WeekDetail = v.InferOutput<typeof WeekDetailSchema>;

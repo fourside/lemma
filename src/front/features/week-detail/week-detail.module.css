@@ -35,6 +35,22 @@
   font-weight: 500;
 }
 
+.section {
+  margin-bottom: 16px;
+}
+
+.generateButtons {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 8px;
+  justify-content: start;
+}
+
+.stepButton:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
 .steps {
   margin-bottom: 16px;
 }
