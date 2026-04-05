@@ -1,18 +1,23 @@
 import { type FormEvent, useState } from "react";
 import { Link, useParams } from "react-router";
-import type { GradeTestResponse, TestQuestion } from "../../../models/test";
+import type { TestQuestion } from "../../../models/test";
 import { apiFetch } from "../../shared/api/client";
 import { BottomNav } from "../../shared/components/bottom-nav";
 import styles from "./test.module.css";
 
-type Phase = "idle" | "loading" | "answering" | "grading" | "result" | "error";
+type Phase =
+  | "idle"
+  | "loading"
+  | "answering"
+  | "submitting"
+  | "submitted"
+  | "error";
 
 export function TestPage() {
   const { weekId } = useParams<{ weekId: string }>();
   const [phase, setPhase] = useState<Phase>("idle");
   const [questions, setQuestions] = useState<TestQuestion[]>([]);
   const [answers, setAnswers] = useState<Map<number, string>>(new Map());
-  const [result, setResult] = useState<GradeTestResponse | null>(null);
   const [errorMessage, setErrorMessage] = useState("");
 
   const startTest = async () => {
@@ -43,7 +48,7 @@ export function TestPage() {
 
   const submitTest = async (e: FormEvent) => {
     e.preventDefault();
-    setPhase("grading");
+    setPhase("submitting");
 
     const answerList = questions.map((q) => ({
       questionId: q.id,
@@ -51,17 +56,13 @@ export function TestPage() {
     }));
 
     try {
-      const res = await apiFetch<GradeTestResponse>(
-        `/weeks/${weekId}/grade-test`,
-        {
-          method: "POST",
-          body: JSON.stringify({ answers: answerList }),
-        },
-      );
-      setResult(res);
-      setPhase("result");
+      await apiFetch(`/weeks/${weekId}/submit-answers`, {
+        method: "POST",
+        body: JSON.stringify({ answers: answerList }),
+      });
+      setPhase("submitted");
     } catch (err) {
-      setErrorMessage(err instanceof Error ? err.message : "Grading failed");
+      setErrorMessage(err instanceof Error ? err.message : "Submission failed");
       setPhase("error");
     }
   };
@@ -121,52 +122,22 @@ export function TestPage() {
         </div>
       );
 
-    case "grading":
+    case "submitting":
       return (
         <div className={styles.page}>
-          <h1 className={styles.title}>Grading...</h1>
+          <h1 className={styles.title}>Submitting...</h1>
           <BottomNav />
         </div>
       );
 
-    case "result":
-      if (!result) return null;
+    case "submitted":
       return (
         <div className={styles.page}>
           <Link to={`/weeks/${weekId}`} className={styles.back}>
             &larr; Back
           </Link>
-          <h1 className={styles.title}>
-            Result: {result.score}/{result.maxScore}
-          </h1>
-
-          {result.weakTopics.length > 0 && (
-            <div className={styles.weakTopics}>
-              <span className={styles.weakLabel}>Weak topics:</span>
-              {result.weakTopics.map((t) => (
-                <span key={t} className={styles.weakTag}>
-                  {t}
-                </span>
-              ))}
-            </div>
-          )}
-
-          {result.grades.map((g, i) => (
-            <div key={g.questionId} className={styles.gradeCard}>
-              <p className={styles.gradeHeader}>
-                Q{i + 1}: {g.score}/{g.max_score}
-              </p>
-              <p className={styles.gradeFeedback}>{g.feedback}</p>
-            </div>
-          ))}
-
-          <button
-            type="button"
-            className={styles.startButton}
-            onClick={startTest}
-          >
-            Retry
-          </button>
+          <h1 className={styles.title}>Submitted</h1>
+          <p>Answers saved. Run the grading script locally to get results.</p>
           <BottomNav />
         </div>
       );

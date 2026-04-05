@@ -1,16 +1,10 @@
 import { Hono } from "hono";
 import { sql } from "kysely";
 import * as v from "valibot";
-import { LectureTypeSchema } from "../../models/lecture";
 import { UpdateProgressRequestSchema } from "../../models/progress";
 import type { Env } from "../index";
-import { generateLectureText } from "../services/claude";
 import { r2KeyToSlug } from "../services/r2";
 import { nowISO } from "../utils/date";
-
-const GenerateLectureRequestSchema = v.object({
-  type: LectureTypeSchema,
-});
 
 export const weeksRoutes = new Hono<Env>();
 
@@ -97,49 +91,6 @@ weeksRoutes.get("/weeks/:weekId", async (c) => {
     audioR2Key: undefined,
     audioUrl: slug ? `/api/audio/${slug}.m4a` : null,
   });
-});
-
-weeksRoutes.post("/weeks/:weekId/generate-lecture", async (c) => {
-  const weekId = Number(c.req.param("weekId"));
-  const body = await c.req.json();
-  const result = v.safeParse(GenerateLectureRequestSchema, body);
-  if (!result.success) {
-    return c.json({ error: "Invalid request" }, 400);
-  }
-
-  const { type } = result.output;
-  const db = c.get("db");
-
-  const week = await db
-    .selectFrom("weeks")
-    .select(["title", "keywords"])
-    .where("id", "=", weekId)
-    .executeTakeFirst();
-
-  if (!week) {
-    return c.json({ error: "Week not found" }, 404);
-  }
-
-  const content = await generateLectureText(
-    week.title,
-    week.keywords ?? "",
-    type,
-    c.env.ANTHROPIC_API_KEY,
-  );
-
-  const now = nowISO();
-
-  await db
-    .insertInto("lecture_texts")
-    .values({ week_id: weekId, type, content, generated_at: now })
-    .onConflict((oc) =>
-      oc
-        .columns(["week_id", "type"])
-        .doUpdateSet({ content, generated_at: now }),
-    )
-    .execute();
-
-  return c.json({ content });
 });
 
 weeksRoutes.put("/weeks/:weekId/progress", async (c) => {

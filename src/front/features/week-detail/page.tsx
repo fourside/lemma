@@ -1,7 +1,6 @@
 import { type FormEvent, useState } from "react";
 import { Link, useParams } from "react-router";
 import useSWR from "swr";
-import type { LectureType } from "../../../models/lecture";
 import type { ProgressStatus, WeekDetail } from "../../../models/week";
 import { apiFetch, swrFetcher } from "../../shared/api/client";
 import { AudioPlayer } from "../../shared/components/audio-player";
@@ -31,9 +30,6 @@ export function WeekDetailPage() {
   );
   const [testScore, setTestScore] = useState("");
   const [testNotes, setTestNotes] = useState("");
-  const [generatingType, setGeneratingType] = useState<LectureType | null>(
-    null,
-  );
 
   if (!week) return null;
 
@@ -58,19 +54,6 @@ export function WeekDetailPage() {
     const score = Number(testScore);
     if (score >= 0 && score <= 100) {
       updateProgress("test_done", score, testNotes || undefined);
-    }
-  };
-
-  const handleGenerateLecture = async (type: LectureType) => {
-    setGeneratingType(type);
-    try {
-      await apiFetch(`/weeks/${weekId}/generate-lecture`, {
-        method: "POST",
-        body: JSON.stringify({ type }),
-      });
-      mutate();
-    } finally {
-      setGeneratingType(null);
     }
   };
 
@@ -107,34 +90,6 @@ export function WeekDetailPage() {
         <section className={styles.section}>
           <h2 className={styles.stepsTitle}>Text Lecture</h2>
           <MarkdownViewer content={week.lectureText} />
-        </section>
-      )}
-
-      {(!week.lectureText || !week.audioLectureText) && (
-        <section className={styles.section}>
-          <h2 className={styles.stepsTitle}>Generate</h2>
-          <div className={styles.generateButtons}>
-            {!week.audioLectureText && (
-              <button
-                type="button"
-                className={styles.stepButton}
-                disabled={generatingType !== null}
-                onClick={() => handleGenerateLecture("audio")}
-              >
-                {generatingType === "audio" ? "Generating..." : "Audio Text"}
-              </button>
-            )}
-            {!week.lectureText && (
-              <button
-                type="button"
-                className={styles.stepButton}
-                disabled={generatingType !== null}
-                onClick={() => handleGenerateLecture("text")}
-              >
-                {generatingType === "text" ? "Generating..." : "Text Lecture"}
-              </button>
-            )}
-          </div>
         </section>
       )}
 

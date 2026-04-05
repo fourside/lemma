@@ -17,7 +17,6 @@ export type Env = {
     DB: D1Database;
     CONTENT_BUCKET: R2Bucket;
     JWT_SECRET: string;
-    ANTHROPIC_API_KEY: string;
   };
   Variables: {
     db: Kysely<Database>;

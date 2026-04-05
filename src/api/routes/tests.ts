@@ -8,7 +8,6 @@ import {
 } from "../../models/test";
 import type { Database } from "../db";
 import type { Env } from "../index";
-import { gradeAnswer } from "../services/claude";
 import { getTestPool } from "../services/r2";
 import { nowISO } from "../utils/date";
 
@@ -59,7 +58,7 @@ testsRoutes.post("/weeks/:weekId/generate-test", async (c) => {
   return c.json({ questions: shuffled.slice(0, count) });
 });
 
-testsRoutes.post("/weeks/:weekId/grade-test", async (c) => {
+testsRoutes.post("/weeks/:weekId/submit-answers", async (c) => {
   const weekId = Number(c.req.param("weekId"));
   const body = await c.req.json();
   const parseResult = v.safeParse(GradeTestRequestSchema, body);
@@ -70,54 +69,27 @@ testsRoutes.post("/weeks/:weekId/grade-test", async (c) => {
   const { answers } = parseResult.output;
   const db = c.get("db");
 
-  const pool = await loadTestQuestions(db, c.env.CONTENT_BUCKET, weekId);
-  if (!pool) {
-    return c.json({ error: "Week or test pool not found" }, 404);
+  const week = await db
+    .selectFrom("weeks")
+    .select("id")
+    .where("id", "=", weekId)
+    .executeTakeFirst();
+
+  if (!week) {
+    return c.json({ error: "Week not found" }, 404);
   }
-
-  const questionMap = new Map(pool.questions.map((q) => [q.id, q]));
-
-  const grades = await Promise.all(
-    answers
-      .filter((ans) => questionMap.has(ans.questionId))
-      .map(async (ans) => {
-        const question = questionMap.get(ans.questionId);
-        if (!question) throw new Error("unreachable");
-
-        const grade = await gradeAnswer(
-          question.question,
-          question.rubric,
-          question.max_score,
-          ans.answer,
-          c.env.ANTHROPIC_API_KEY,
-        );
-        return { ...grade, questionId: ans.questionId };
-      }),
-  );
-
-  const totalScore = grades.reduce((sum, g) => sum + g.score, 0);
-  const maxScore = grades.reduce((sum, g) => sum + g.max_score, 0);
-  const allWeakTopics = [...new Set(grades.flatMap((g) => g.weak_topics))];
 
   await db
     .insertInto("test_attempts")
     .values({
       week_id: weekId,
-      score: totalScore,
-      max_score: maxScore,
+      score: 0,
+      max_score: 0,
       answers_json: JSON.stringify(answers),
-      feedback_json: JSON.stringify({
-        grades,
-        weak_topics: allWeakTopics,
-      }),
+      feedback_json: null,
       attempted_at: nowISO(),
     })
     .execute();
 
-  return c.json({
-    score: totalScore,
-    maxScore,
-    grades,
-    weakTopics: allWeakTopics,
-  });
+  return c.json({ ok: true });
 });
