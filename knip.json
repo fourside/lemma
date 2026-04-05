@@ -1,0 +1,4 @@
+{
+  "ignore": ["scripts/**", "src/front/sw.ts"],
+  "ignoreDependencies": ["cloudflare", "workbox-core", "workbox-precaching"]
+}

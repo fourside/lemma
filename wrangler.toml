@@ -1,0 +1,19 @@
+name = "lemma"
+main = "worker.ts"
+compatibility_date = "2025-04-01"
+
+[assets]
+not_found_handling = "single-page-application"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "lemma"
+database_id = "local"
+migrations_dir = "migrations"
+
+[[r2_buckets]]
+binding = "CONTENT_BUCKET"
+bucket_name = "lemma-content"
+
+# Secrets (set via `wrangler secret put`, local dev values in .dev.vars)
+# - JWT_SECRET

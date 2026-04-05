@@ -1,0 +1,31 @@
+.badge {
+  display: inline-block;
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: var(--radius-full);
+}
+
+.notStarted {
+  color: var(--color-text-muted);
+  background: var(--color-border-light);
+}
+
+.audioDone {
+  color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+
+.textDone {
+  color: #b45309;
+  background: var(--color-warning-light);
+}
+
+.testDone {
+  color: var(--color-success);
+  background: #dcfce7;
+}
+
+:root[data-theme="dark"] .testDone {
+  background: #052e16;
+}

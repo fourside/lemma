@@ -1,0 +1,12 @@
+name = "lemma"
+main = "worker.ts"
+compatibility_date = "2025-04-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "lemma"
+database_id = ""
+migrations_dir = "migrations"
+
+[vars]
+JWT_SECRET = "test-secret"

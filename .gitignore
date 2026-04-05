@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.wrangler/
+.dev.vars
+*.local
+test-results/
+playwright-report/
+out/
+PLAN.md
+IMPLEMENTATION.md
+cs-curriculum.md
