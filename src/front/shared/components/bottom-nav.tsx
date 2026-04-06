@@ -29,6 +29,14 @@ export function BottomNav() {
       >
         Stats
       </NavLink>
+      <NavLink
+        to="/markers"
+        className={({ isActive }) =>
+          `${styles.link} ${isActive ? styles.active : ""}`
+        }
+      >
+        Markers
+      </NavLink>
     </nav>
   );
 }

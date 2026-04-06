@@ -1,6 +1,7 @@
 import { type FormEvent, useState } from "react";
 import { Link, useParams } from "react-router";
 import useSWR from "swr";
+import type { Marker } from "../../../models/marker";
 import type { ProgressStatus, WeekDetail } from "../../../models/week";
 import { apiFetch, swrFetcher } from "../../shared/api/client";
 import { AudioPlayer } from "../../shared/components/audio-player";
@@ -26,6 +27,10 @@ export function WeekDetailPage() {
   const { weekId } = useParams<{ weekId: string }>();
   const { data: week, mutate } = useSWR<WeekDetail>(
     `/weeks/${weekId}`,
+    swrFetcher,
+  );
+  const { data: markers, mutate: mutateMarkers } = useSWR<Marker[]>(
+    weekId ? `/markers?weekId=${weekId}` : null,
     swrFetcher,
   );
   const [testScore, setTestScore] = useState("");
@@ -55,6 +60,24 @@ export function WeekDetailPage() {
     if (score >= 0 && score <= 100) {
       updateProgress("test_done", score, testNotes || undefined);
     }
+  };
+
+  const handleAddMarker = async (info: {
+    text: string;
+    startOffset: number;
+    length: number;
+    sectionHeading: string | null;
+  }) => {
+    await apiFetch("/markers", {
+      method: "POST",
+      body: JSON.stringify({ weekId: Number(weekId), ...info }),
+    });
+    mutateMarkers();
+  };
+
+  const handleDeleteMarker = async (markerId: number) => {
+    await apiFetch(`/markers/${markerId}`, { method: "DELETE" });
+    mutateMarkers();
   };
 
   const keywords = week.keywords?.split(",").map((k) => k.trim()) ?? [];
@@ -89,7 +112,34 @@ export function WeekDetailPage() {
       {week.lectureText && (
         <section className={styles.section}>
           <h2 className={styles.stepsTitle}>Text Lecture</h2>
-          <MarkdownViewer content={week.lectureText} />
+          <MarkdownViewer
+            content={week.lectureText}
+            markers={markers ?? []}
+            onAddMarker={handleAddMarker}
+          />
+        </section>
+      )}
+
+      {markers && markers.length > 0 && (
+        <section className={styles.section}>
+          <h2 className={styles.stepsTitle}>Markers ({markers.length})</h2>
+          {markers.map((m) => (
+            <div key={m.id} className={styles.markerItem}>
+              <div className={styles.markerContent}>
+                <p className={styles.markerText}>{m.text}</p>
+                {m.sectionHeading && (
+                  <p className={styles.markerSection}>{m.sectionHeading}</p>
+                )}
+              </div>
+              <button
+                type="button"
+                className={styles.markerDelete}
+                onClick={() => handleDeleteMarker(m.id)}
+              >
+                x
+              </button>
+            </div>
+          ))}
         </section>
       )}
 

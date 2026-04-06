@@ -4,6 +4,7 @@ import { LoginPage } from "./features/auth/page";
 import { CourseDetailPage } from "./features/course-detail/page";
 import { CoursesPage } from "./features/courses/page";
 import { DashboardPage } from "./features/dashboard/page";
+import { MarkersPage } from "./features/markers/page";
 import { TestPage } from "./features/test/page";
 import { WeekDetailPage } from "./features/week-detail/page";
 import { AuthProvider } from "./shared/auth/auth-context";
@@ -22,6 +23,7 @@ export function App() {
             <Route path="/weeks/:weekId" element={<WeekDetailPage />} />
             <Route path="/weeks/:weekId/test" element={<TestPage />} />
             <Route path="/analytics" element={<AnalyticsPage />} />
+            <Route path="/markers" element={<MarkersPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

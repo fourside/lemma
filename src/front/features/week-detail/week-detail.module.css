@@ -166,3 +166,42 @@
   font-size: var(--font-size-base);
   line-height: 1.5;
 }
+
+.markerItem {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: start;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--color-surface);
+  border-radius: var(--radius-md);
+  margin-bottom: 6px;
+}
+
+.markerContent {
+  min-width: 0;
+}
+
+.markerText {
+  margin: 0;
+  font-size: var(--font-size-sm);
+  line-height: 1.4;
+  border-left: 3px solid #fbbf24;
+  padding-left: 8px;
+}
+
+.markerSection {
+  margin: 2px 0 0;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  padding-left: 11px;
+}
+
+.markerDelete {
+  background: none;
+  border: none;
+  color: var(--color-text-muted);
+  cursor: pointer;
+  font-size: var(--font-size-sm);
+  padding: 2px 6px;
+}

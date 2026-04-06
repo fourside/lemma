@@ -50,6 +50,16 @@ export interface Database {
     content: string;
     generated_at: string;
   };
+  markers: {
+    id: Generated<number>;
+    week_id: number;
+    text: string;
+    start_offset: number;
+    length: number;
+    section_heading: string | null;
+    note: string | null;
+    created_at: string;
+  };
   test_attempts: {
     id: Generated<number>;
     week_id: number;

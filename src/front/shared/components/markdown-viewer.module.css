@@ -56,3 +56,33 @@
   padding: 0.4em 1em;
   color: var(--color-text-secondary);
 }
+
+.highlight {
+  background: #fef08a;
+  border-radius: 2px;
+}
+
+:root[data-theme="dark"] .highlight {
+  background: #854d0e;
+  color: #fef9c3;
+}
+
+.popover {
+  z-index: var(--z-overlay);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  padding: 4px;
+}
+
+.popoverButton {
+  padding: 6px 12px;
+  background: var(--color-primary);
+  color: var(--color-on-primary);
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  cursor: pointer;
+}

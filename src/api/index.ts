@@ -9,6 +9,7 @@ import { authRoutes } from "./routes/auth";
 import { coursesRoutes } from "./routes/courses";
 import { dashboardRoutes } from "./routes/dashboard";
 import { feedRoutes } from "./routes/feed";
+import { markersRoutes } from "./routes/markers";
 import { testsRoutes } from "./routes/tests";
 import { weeksRoutes } from "./routes/weeks";
 
@@ -46,6 +47,7 @@ app.use("/api/*", async (c, next) => {
 app.route("/api/dashboard", dashboardRoutes);
 app.route("/api/courses", coursesRoutes);
 app.route("/api/analytics", analyticsRoutes);
+app.route("/api/markers", markersRoutes);
 app.route("/api", testsRoutes);
 app.route("/api", weeksRoutes);
 
