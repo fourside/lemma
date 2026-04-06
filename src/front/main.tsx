@@ -1,5 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { SWRConfig } from "swr";
 import { App } from "./app";
 import "./global.css";
 import { ThemeProvider } from "./shared/theme/theme-context";
@@ -9,9 +10,16 @@ if (!root) throw new Error("Root element not found");
 
 createRoot(root).render(
   <StrictMode>
-    <ThemeProvider>
-      <App />
-    </ThemeProvider>
+    <SWRConfig
+      value={{
+        revalidateOnFocus: false,
+        revalidateOnReconnect: false,
+      }}
+    >
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    </SWRConfig>
   </StrictMode>,
 );
 
