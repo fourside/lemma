@@ -4,13 +4,16 @@ import { getAudioFile } from "../services/r2";
 
 export const audioRoutes = new Hono<Env>();
 
-audioRoutes.get("/:slug.m4a", async (c) => {
-  const slug = c.req.param("slug");
-  const rangeHeader = c.req.header("Range");
+audioRoutes.get("/:file", async (c) => {
+  const file = c.req.param("file");
+  if (!file.endsWith(".m4a")) {
+    return c.json({ error: "Not found" }, 404);
+  }
 
+  const rangeHeader = c.req.header("Range");
   const result = await getAudioFile(
     c.env.CONTENT_BUCKET,
-    `audio/${slug}.m4a`,
+    `audio/${file}`,
     rangeHeader,
   );
 
