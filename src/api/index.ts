@@ -33,12 +33,18 @@ app.use("/api/*", async (c, next) => {
 });
 
 app.route("/api/auth", authRoutes);
+app.route("/api/audio", audioRoutes);
 app.route("", feedRoutes);
 
-app.use("/api/*", authMiddleware);
+app.use("/api/*", async (c, next) => {
+  const path = c.req.path;
+  if (path.startsWith("/api/auth/") || path.startsWith("/api/audio/")) {
+    return next();
+  }
+  return authMiddleware(c, next);
+});
 app.route("/api/dashboard", dashboardRoutes);
 app.route("/api/courses", coursesRoutes);
-app.route("/api/audio", audioRoutes);
 app.route("/api/analytics", analyticsRoutes);
 app.route("/api", testsRoutes);
 app.route("/api", weeksRoutes);
