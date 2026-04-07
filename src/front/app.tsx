@@ -9,11 +9,13 @@ import { TestPage } from "./features/test/page";
 import { WeekDetailPage } from "./features/week-detail/page";
 import { AuthProvider } from "./shared/auth/auth-context";
 import { AuthGuard } from "./shared/auth/auth-guard";
+import { RestoreNavigation } from "./shared/restore-navigation";
 
 export function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <RestoreNavigation />
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route element={<AuthGuard />}>
