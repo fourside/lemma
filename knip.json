@@ -1,4 +1,12 @@
 {
-  "ignore": ["scripts/**", "src/front/sw.ts"],
-  "ignoreDependencies": ["cloudflare", "workbox-core", "workbox-precaching"]
+  "ignore": ["src/front/sw.ts"],
+  "ignoreDependencies": [
+    "@base-ui/react",
+    "cloudflare",
+    "workbox-core",
+    "workbox-precaching",
+    "workbox-routing",
+    "workbox-strategies"
+  ],
+  "ignoreExportsUsedInFile": true
 }

@@ -29,7 +29,3 @@ export const CreateMarkerRequestSchema = v.object({
   sectionHeading: v.optional(v.nullable(v.string())),
   note: v.optional(v.nullable(v.string())),
 });
-
-export type CreateMarkerRequest = v.InferOutput<
-  typeof CreateMarkerRequestSchema
->;

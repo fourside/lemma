@@ -51,15 +51,6 @@ function parseRange(header: string): R2Range {
   return { offset };
 }
 
-export async function getLectureText(
-  bucket: R2Bucket,
-  key: string,
-): Promise<string | null> {
-  const object = await bucket.get(key);
-  if (!object) return null;
-  return object.text();
-}
-
 export async function getTestPool(
   bucket: R2Bucket,
   key: string,

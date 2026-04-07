@@ -5,8 +5,6 @@ export const LoginRequestSchema = v.object({
   password: v.pipe(v.string(), v.minLength(1)),
 });
 
-export type LoginRequest = v.InferOutput<typeof LoginRequestSchema>;
-
 export interface User {
   id: number;
   name: string;
