@@ -1,4 +1,4 @@
-import { Hono } from "hono";
+import { Hono, type MiddlewareHandler } from "hono";
 import type { Kysely } from "kysely";
 import type { Database } from "./db";
 import { createDb } from "./db";
@@ -27,11 +27,13 @@ export type Env = {
 
 const app = new Hono<Env>();
 
-app.use("/api/*", async (c, next) => {
-  const db = createDb(c.env.DB);
-  c.set("db", db);
+const setupDb: MiddlewareHandler<Env> = async (c, next) => {
+  c.set("db", createDb(c.env.DB));
   await next();
-});
+};
+
+app.use("/api/*", setupDb);
+app.use("/feed.xml", setupDb);
 
 app.route("/api/auth", authRoutes);
 app.route("/api/audio", audioRoutes);
